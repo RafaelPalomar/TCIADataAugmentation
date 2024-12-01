@@ -33,8 +33,18 @@ RUN curl -L https://download.slicer.org/bitstream/6748030776aed8e333421336 | tar
 #Download Slicer-SOFA
 RUN gdown 15cghLNvNzXGc7FdcJP6NDjNbZEeck4C2 -O 33130-linux-amd64-Sofa-git365fd33-2024-11-24.tar
 
-# Make Extensions directory and install Slicer-SOFA
-COPY scripts/slicer_install_Slicer-SOFA.py /
+#Copy QuantitativeReporting Slicer Extension
+COPY packages/30822-linux-amd64-QuantitativeReporting-gitd4892cf-2022-04-08.tar.gz /
+
+# Make Extensions directory and install dependencies
+#TODO: This apparently still does not pull some dependencies for the QuantitativeReporting Slicer Exension
+#      A workaround is to launch Slicer inside the container and install the QuantitativeReporting there
+COPY scripts/slicer_install_dependencies.py /
 RUN xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
-    /opt/Slicer-5.7.0-2024-11-27-linux-amd64/Slicer --no-main-window --launcher-no-splash --python-script /slicer_install_Slicer-SOFA.py
-RUN rm /slicer_install_Slicer-SOFA.py
+    /opt/Slicer-5.7.0-2024-11-27-linux-amd64/Slicer --no-main-window --launcher-no-splash --python-script /slicer_install_dependencies.py
+RUN rm /slicer_install_dependencies.py
+
+# Change permissions of /opt/Slicer to make it writable for the user running the container
+RUN chmod -R ugo+w /opt/Slicer-*
+
+#RUN curl -L https://github.com/QIICR/dcmqi/releases/download/v1.3.4/dcmqi-1.3.4-linux.tar.gz | tar xz -C /opt
