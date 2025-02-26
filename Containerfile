@@ -25,7 +25,7 @@ RUN rm /pip-packages
 
 #Download and  install NBIA download client
 RUN curl -LO https://github.com/CBIIT/NBIA-TCIA/releases/download/DR-4_4_3-TCIA-20240916-1/nbia-data-retriever_4.4.3-1_amd64.deb && \
-    dpkg -x nbia-data-retriever_4.4.3-1_amd64.deb /opt
+    dpkg -x nbia-data-retriever_4.4.3-1_amd64.deb /
 
 #Download and install 3D Slicer
 RUN curl -L https://download.slicer.org/bitstream/6748030776aed8e333421336 | tar xz -C /opt
@@ -47,4 +47,9 @@ RUN rm /slicer_install_dependencies.py
 # Change permissions of /opt/Slicer to make it writable for the user running the container
 RUN chmod -R ugo+w /opt/Slicer-*
 
-#RUN curl -L https://github.com/QIICR/dcmqi/releases/download/v1.3.4/dcmqi-1.3.4-linux.tar.gz | tar xz -C /opt
+RUN curl -L https://github.com/QIICR/dcmqi/releases/download/v1.3.4/dcmqi-1.3.4-linux.tar.gz | tar xz -C /opt
+
+# Download dataset manifest
+RUN mkdir -p /data && \
+    cd /data && \
+    curl -LO https://www.cancerimagingarchive.net/wp-content/uploads/Colorectal-Liver-Metastases-November-2022-manifest.tcia
