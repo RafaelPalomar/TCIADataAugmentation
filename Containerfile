@@ -27,11 +27,11 @@ RUN rm /pip-packages
 RUN curl -LO https://github.com/CBIIT/NBIA-TCIA/releases/download/DR-4_4_3-TCIA-20240916-1/nbia-data-retriever_4.4.3-1_amd64.deb && \
     dpkg -x nbia-data-retriever_4.4.3-1_amd64.deb /
 
-#Download and install 3D Slicer
-RUN curl -L https://download.slicer.org/bitstream/6748030776aed8e333421336 | tar xz -C /opt
+#Download and install 3D Slicer 5.9.0
+RUN curl -L https://download.slicer.org/bitstream/685f7312a2a452fc449ea770 | tar xz -C /opt
 
 #Download Slicer-SOFA
-RUN gdown 15cghLNvNzXGc7FdcJP6NDjNbZEeck4C2 -O 33130-linux-amd64-Sofa-git365fd33-2024-11-24.tar
+RUN curl -L https://slicer-packages.kitware.com/api/v1/item/68610041a2a452fc449f2adf/download > 33727-linux-amd64-SlicerSOFA-git63eb08b-2025-06-27.tar.gz
 
 #Copy QuantitativeReporting Slicer Extension
 COPY packages/30822-linux-amd64-QuantitativeReporting-gitd4892cf-2022-04-08.tar.gz /
@@ -41,7 +41,7 @@ COPY packages/30822-linux-amd64-QuantitativeReporting-gitd4892cf-2022-04-08.tar.
 #      A workaround is to launch Slicer inside the container and install the QuantitativeReporting there
 COPY scripts/slicer_install_dependencies.py /
 RUN xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
-    /opt/Slicer-5.7.0-2024-11-27-linux-amd64/Slicer --no-main-window --launcher-no-splash --python-script /slicer_install_dependencies.py
+    /opt/Slicer-5.9.0-2025-06-27-linux-amd64/Slicer --no-main-window --launcher-no-splash --python-script /slicer_install_dependencies.py
 RUN rm /slicer_install_dependencies.py
 
 # Change permissions of /opt/Slicer to make it writable for the user running the container
